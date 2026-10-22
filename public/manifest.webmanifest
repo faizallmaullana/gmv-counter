@@ -1,0 +1,21 @@
+{
+  "id": "/",
+  "name": "GMV Counter — Akumulasi Sesi",
+  "short_name": "GMV Counter",
+  "description": "Hitung akumulasi GMV dan metrik performa dari empat sesi.",
+  "lang": "id-ID",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f8fafc",
+  "theme_color": "#f8fafc",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
