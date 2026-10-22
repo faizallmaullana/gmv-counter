@@ -214,7 +214,7 @@ onMounted(() => {
             </div>
           </div>
         </header>
-
+<!-- trigger aja -->
         <div class="mb-8 rounded-2xl border border-slate-200 bg-white p-5 sm:p-7">
           <div class="mb-7 flex items-start justify-between gap-2">
             <div v-for="(session, index) in sessions" :key="index" class="flex min-w-0 flex-1 flex-col items-center">
