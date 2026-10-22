@@ -17,6 +17,7 @@ const dbError = ref('')
 const activeResult = ref(null)
 const installPrompt = ref(null)
 const copiedReport = ref(false)
+const reportToDelete = ref(null)
 
 const completed = computed(() => sessions.map((session) => fields.every((field) => session[field.key] !== '' && Number.isFinite(Number(session[field.key])))))
 const canContinue = computed(() => true)
@@ -111,7 +112,9 @@ async function saveReport() {
   }
 }
 
-async function deleteReport(id) {
+async function deleteReport() {
+  const id = reportToDelete.value?.id
+  if (id == null) return
   try {
     const db = await openDatabase()
     await new Promise((resolve, reject) => {
@@ -124,6 +127,7 @@ async function deleteReport(id) {
     db.close()
     history.value = history.value.filter((item) => item.id !== id)
     if (activeResult.value?.id === id) activeResult.value = null
+    reportToDelete.value = null
   } catch (error) {
     dbError.value = error.message || 'Riwayat gagal dihapus.'
   }
@@ -196,7 +200,6 @@ onMounted(() => {
         <div class="mb-8">
           <p class="mb-2 text-sm font-semibold text-indigo-600">INPUT DATA</p>
           <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">Catat performa sesi</h1>
-          <p class="mt-3 max-w-xl leading-6 text-slate-500">Masukkan angka untuk setiap sesi. Setelah sesi keempat, hasil selisih tiap metrik akan dirangkum otomatis.</p>
         </div>
 
         <div class="mb-8 rounded-2xl border border-slate-200 bg-white p-5 sm:p-7">
@@ -247,12 +250,22 @@ onMounted(() => {
       </section>
 
       <section v-else class="mx-auto max-w-4xl">
-        <div class="mb-8 flex flex-wrap items-end justify-between gap-4"><div><p class="mb-2 text-sm font-semibold text-indigo-600">TERSIMPAN DI PERANGKAT INI</p><h1 class="text-3xl font-bold tracking-tight sm:text-4xl">Riwayat laporan</h1><p class="mt-2 text-slate-500">Semua hasil tersimpan di browser menggunakan IndexedDB.</p></div><button class="rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-indigo-700" @click="startNew">+ Input baru</button></div>
-        <div v-if="history.length" class="space-y-3"><article v-for="report in history" :key="report.id" class="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-5 transition hover:border-indigo-200"><button class="min-w-0 flex-1 text-left" @click="selectHistory(report)"><span class="block font-bold">{{ formatCurrency(report.results.find((item) => item.key === 'gmv')?.total ?? 0) }} <span class="font-medium text-slate-500">GMV</span></span><span class="mt-1 block text-sm text-slate-500">{{ dateLabel(report.createdAt) }}</span></button><button class="rounded-lg px-3 py-2 text-sm font-semibold text-indigo-700 hover:bg-indigo-50" @click="selectHistory(report)">Lihat laporan →</button><button class="rounded-lg px-3 py-2 text-sm text-slate-400 hover:bg-rose-50 hover:text-rose-600" :aria-label="`Hapus laporan ${dateLabel(report.createdAt)}`" @click="deleteReport(report.id)">Hapus</button></article></div>
+        <div v-if="history.length" class="space-y-3"><article v-for="report in history" :key="report.id" class="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-5 transition hover:border-indigo-200"><button class="min-w-0 flex-1 text-left" @click="selectHistory(report)"><span class="block font-bold">{{ formatCurrency(report.results.find((item) => item.key === 'gmv')?.total ?? 0) }} <span class="font-medium text-slate-500">GMV</span></span><span class="mt-1 block text-sm text-slate-500">{{ dateLabel(report.createdAt) }}</span></button><button class="rounded-lg px-3 py-2 text-sm font-semibold text-indigo-700 hover:bg-indigo-50" @click="selectHistory(report)">Lihat laporan →</button><button class="rounded-lg px-3 py-2 text-sm text-slate-400 hover:bg-rose-50 hover:text-rose-600" :aria-label="`Hapus laporan ${dateLabel(report.createdAt)}`" @click="reportToDelete = report">Hapus</button></article></div>
         <div v-else class="rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-14 text-center"><span class="mx-auto mb-4 grid size-12 place-items-center rounded-2xl bg-slate-100 text-xl text-slate-500">↗</span><h2 class="font-bold">Belum ada laporan</h2><p class="mt-2 text-sm text-slate-500">Selesaikan input empat sesi untuk menyimpan hasil pertamamu.</p><button class="mt-5 font-semibold text-indigo-700 hover:text-indigo-900" @click="startNew">Mulai input →</button></div>
       </section>
       <p v-if="dbError" role="alert" class="mx-auto mt-5 max-w-3xl rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">{{ dbError }}</p>
     </main>
-    <footer class="border-t border-slate-200 bg-white py-5 text-center text-xs text-slate-400">Data riwayat tersimpan secara lokal di browser ini. <span class="mx-1">·</span> Dibuat oleh <a href="https://crkstudio.com" target="_blank" rel="noopener noreferrer" class="font-semibold text-slate-500 transition hover:text-indigo-600">CRK Studio</a></footer>
+    <div v-if="reportToDelete" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/45 p-5" @click.self="reportToDelete = null">
+      <section role="dialog" aria-modal="true" aria-labelledby="delete-dialog-title" class="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
+        <div class="mb-4 grid size-11 place-items-center rounded-full bg-rose-50 text-lg text-rose-600">!</div>
+        <h2 id="delete-dialog-title" class="text-lg font-bold">Hapus laporan ini?</h2>
+        <p class="mt-2 text-sm leading-6 text-slate-500">Laporan tanggal {{ dateLabel(reportToDelete.createdAt) }} akan dihapus dari riwayat perangkat ini.</p>
+        <div class="mt-6 flex justify-end gap-3">
+          <button class="rounded-xl border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50" @click="reportToDelete = null">Batal</button>
+          <button class="rounded-xl bg-rose-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-rose-700" @click="deleteReport">Hapus laporan</button>
+        </div>
+      </section>
+    </div>
+    <footer class="border-t border-slate-200 bg-white py-5 text-center text-xs text-slate-400">Dibuat oleh <a href="https://crkstudio.com" target="_blank" rel="noopener noreferrer" class="font-semibold text-slate-500 transition hover:text-indigo-600">CRK Studio</a></footer>
   </div>
 </template>
