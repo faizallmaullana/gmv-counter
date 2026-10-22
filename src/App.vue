@@ -16,6 +16,7 @@ const saving = ref(false)
 const dbError = ref('')
 const activeResult = ref(null)
 const installPrompt = ref(null)
+const copiedReport = ref(false)
 
 const completed = computed(() => sessions.map((session) => fields.every((field) => session[field.key] !== '' && Number.isFinite(Number(session[field.key])))))
 const canContinue = computed(() => true)
@@ -45,8 +46,10 @@ function rawReportText(report) {
 async function copyRawReport(report) {
   try {
     await navigator.clipboard.writeText(rawReportText(report))
+    copiedReport.value = true
     dbError.value = ''
   } catch {
+    copiedReport.value = false
     dbError.value = 'Tidak dapat menyalin otomatis. Pilih dan salin teks laporan secara manual.'
   }
 }
@@ -129,12 +132,14 @@ async function deleteReport(id) {
 function startNew() {
   sessions.forEach((session) => Object.assign(session, emptySession()))
   activeResult.value = null
+  copiedReport.value = false
   currentSession.value = 0
   page.value = 'entry'
   dbError.value = ''
 }
 function selectHistory(report) {
   activeResult.value = report
+  copiedReport.value = false
   page.value = 'report'
   dbError.value = ''
 }
@@ -234,7 +239,7 @@ onMounted(() => {
         <section class="mb-6 rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
           <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
             <div><h2 class="font-bold">Ringkasan teks</h2><p class="mt-1 text-sm text-slate-500">Format siap disalin dan dibagikan.</p></div>
-            <button class="rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50" @click="copyRawReport(activeResult)">Salin teks</button>
+            <button class="rounded-lg border px-3 py-2 text-sm font-semibold transition" :class="copiedReport ? 'border-emerald-200 bg-emerald-50 text-emerald-700' : 'border-slate-300 text-slate-700 hover:bg-slate-50'" :aria-label="copiedReport ? 'Teks berhasil disalin' : 'Salin teks laporan'" @click="copyRawReport(activeResult)">{{ copiedReport ? '✓ Berhasil disalin' : 'Salin teks' }}</button>
           </div>
           <pre class="overflow-x-auto rounded-xl bg-slate-50 p-4 font-mono text-sm leading-6 text-slate-800">{{ rawReportText(activeResult) }}</pre>
         </section>
