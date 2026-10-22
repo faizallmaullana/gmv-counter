@@ -201,7 +201,6 @@ onMounted(() => {
             <div>
               <p class="mb-2 text-sm font-semibold uppercase tracking-[0.16em] text-indigo-200">Input data</p>
               <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">Catat performa sesi</h1>
-              <p class="mt-2 text-sm text-indigo-100">Masukkan data untuk dihitung dan disimpan sebagai laporan.</p>
             </div>
             <span class="rounded-xl border border-white/20 bg-white/10 px-4 py-2.5 text-sm font-semibold">Sesi {{ currentSession + 1 }} / 4</span>
           </div>
@@ -269,7 +268,6 @@ onMounted(() => {
               <button class="mb-5 inline-flex items-center gap-2 text-sm font-medium text-indigo-100 transition hover:text-white" @click="page = 'entry'">← Kembali ke input</button>
               <p class="mb-2 text-sm font-semibold uppercase tracking-[0.16em] text-indigo-200">Arsip lokal</p>
               <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">Riwayat laporan</h1>
-              <p class="mt-2 text-sm text-indigo-100">Laporan tersimpan di browser ini dan tersedia saat offline.</p>
             </div>
             <div class="flex items-center gap-3">
               <span class="rounded-xl border border-white/20 bg-white/10 px-4 py-2.5 text-sm font-semibold">{{ history.length }} {{ history.length === 1 ? 'laporan' : 'laporan' }}</span>
