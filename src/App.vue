@@ -227,9 +227,8 @@ onMounted(() => {
             <button v-if="currentSession < 3" class="rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-40" :disabled="!canContinue" @click="goNext">Lanjutkan <span class="ml-1">→</span></button>
             <button v-else class="rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50" :disabled="saving" @click="fillEmptyValues(currentSession); saveReport()">{{ saving ? 'Menyimpan…' : 'Hitung & simpan laporan' }} <span v-if="!saving" class="ml-1">→</span></button>
           </div>
-          <p class="mt-3 text-right text-xs text-slate-400">Kolom yang kosong akan diisi 0 saat melanjutkan.</p>
         </div>
-        <div class="rounded-xl border border-indigo-100 bg-indigo-50/70 px-4 py-3 text-sm leading-6 text-indigo-900"><span class="mr-2 font-bold">Rumus</span><span class="text-indigo-800">(Sesi 2 − Sesi 1) + (Sesi 4 − Sesi 3), dihitung untuk setiap metrik.</span></div>
+        <div class="rounded-xl border border-indigo-100 bg-indigo-50/70 px-4 py-3 text-sm leading-6 text-indigo-900"><span class="mr-2 font-bold">Rumus</span><span class="text-indigo-800">(Sesi 2 − Sesi 1) + (Sesi 4 − Sesi 3). Jika kosong akan diisi 0.</span></div>
       </section>
 
       <section v-else-if="page === 'report' && activeResult" class="mx-auto max-w-4xl">
