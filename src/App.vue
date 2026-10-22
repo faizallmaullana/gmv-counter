@@ -39,6 +39,17 @@ function formatCurrency(value) {
 function formatted(field, value) {
   return field.key === 'gmv' ? formatCurrency(value) : formatNumber(value)
 }
+function rawReportText(report) {
+  return report.results.map((result) => `${result.label}: ${formatNumber(result.total)}`).join('\n')
+}
+async function copyRawReport(report) {
+  try {
+    await navigator.clipboard.writeText(rawReportText(report))
+    dbError.value = ''
+  } catch {
+    dbError.value = 'Tidak dapat menyalin otomatis. Pilih dan salin teks laporan secara manual.'
+  }
+}
 
 function openDatabase() {
   return new Promise((resolve, reject) => {
@@ -220,6 +231,13 @@ onMounted(() => {
           <div class="grid grid-cols-[1.2fr_1fr_1fr_1.1fr] gap-2 border-b border-slate-100 bg-slate-50 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500 sm:gap-4 sm:px-6"><span>Metrik</span><span>Sesi 2 − 1</span><span>Sesi 4 − 3</span><span>Total akumulasi</span></div>
           <div v-for="result in activeResult.results" :key="result.key" class="grid grid-cols-[1.2fr_1fr_1fr_1.1fr] items-center gap-2 border-b border-slate-100 px-4 py-4 last:border-0 sm:gap-4 sm:px-6"><span class="text-sm font-semibold">{{ result.label }}</span><span class="text-xs text-slate-600 sm:text-sm">{{ formatted(result, result.first) }}</span><span class="text-xs text-slate-600 sm:text-sm">{{ formatted(result, result.second) }}</span><span class="text-sm font-bold text-indigo-700 sm:text-base">{{ formatted(result, result.total) }}</span></div>
         </div>
+        <section class="mb-6 rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
+          <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <div><h2 class="font-bold">Ringkasan teks</h2><p class="mt-1 text-sm text-slate-500">Format siap disalin dan dibagikan.</p></div>
+            <button class="rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50" @click="copyRawReport(activeResult)">Salin teks</button>
+          </div>
+          <pre class="overflow-x-auto rounded-xl bg-slate-50 p-4 font-mono text-sm leading-6 text-slate-800">{{ rawReportText(activeResult) }}</pre>
+        </section>
         <details class="group rounded-2xl border border-slate-200 bg-white"><summary class="cursor-pointer list-none px-5 py-4 font-semibold marker:hidden">Lihat input setiap sesi <span class="float-right text-slate-400 transition group-open:rotate-180">⌄</span></summary><div class="overflow-x-auto border-t border-slate-100"><table class="w-full min-w-[500px] text-left text-sm"><thead class="bg-slate-50 text-xs uppercase text-slate-500"><tr><th class="px-5 py-3">Metrik</th><th v-for="(_, index) in activeResult.sessions" :key="index" class="px-4 py-3">Sesi {{ index + 1 }}</th></tr></thead><tbody><tr v-for="field in fields" :key="field.key" class="border-t border-slate-100"><td class="px-5 py-3 font-medium">{{ field.label }}</td><td v-for="(session, index) in activeResult.sessions" :key="index" class="px-4 py-3">{{ formatted(field, session[field.key]) }}</td></tr></tbody></table></div></details>
       </section>
 
