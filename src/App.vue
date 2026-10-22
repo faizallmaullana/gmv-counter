@@ -206,10 +206,10 @@ onMounted(() => {
 
     <main class="mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-12">
       <section v-if="page === 'entry'" class="mx-auto max-w-3xl">
-        <header class="mb-8 overflow-hidden rounded-2xl bg-gradient-to-br from-pink-700 via-pink-600 to-fuchsia-600 px-6 py-7 text-white shadow-lg shadow-pink-200/60 sm:px-8 sm:py-9">
+        <header class="mb-8 overflow-hidden rounded-2xl bg-gradient-to-br from-pink-300 via-pink-200 to-rose-200 px-6 py-7 text-pink-950 shadow-lg shadow-pink-200/60 sm:px-8 sm:py-9">
           <div class="flex flex-wrap items-end justify-between gap-5">
             <div>
-              <p class="mb-2 text-sm font-semibold uppercase tracking-[0.16em] text-pink-200">Input data</p>
+              <p class="mb-2 text-sm font-semibold uppercase tracking-[0.16em] text-pink-800">Input data</p>
               <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">Catat performa sesi</h1>
             </div>
           </div>
@@ -221,9 +221,7 @@ onMounted(() => {
               <button class="mb-2 grid size-9 place-items-center rounded-full border text-sm font-bold transition" :class="index === currentSession ? 'border-pink-600 bg-pink-600 text-white shadow-md shadow-pink-200' : completed[index] ? 'border-pink-200 bg-pink-50 text-pink-700' : 'border-slate-200 bg-white text-slate-400'" :aria-label="`Pilih Sesi ${index + 1}`" @click="completed[index] && (currentSession = index)">{{ completed[index] ? '✓' : index + 1 }}</button>
             </div>
           </div>
-          <div class="mb-6 flex items-center justify-between border-b border-slate-100 pb-4">
-            <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">{{ currentSession + 1 }} / 4</span>
-          </div>
+          
           <div class="grid gap-5 sm:grid-cols-2">
             <label v-for="field in fields" :key="field.key" class="block">
               <span class="mb-2 block text-sm font-semibold text-slate-700">{{ field.label }}</span>
@@ -243,13 +241,13 @@ onMounted(() => {
       </section>
 
       <section v-else-if="page === 'report' && activeResult" class="mx-auto max-w-4xl">
-        <header class="mb-8 overflow-hidden rounded-2xl bg-gradient-to-br from-pink-700 via-pink-600 to-fuchsia-600 px-6 py-7 text-white shadow-lg shadow-pink-200/60 sm:px-8 sm:py-9">
+        <header class="mb-8 overflow-hidden rounded-2xl bg-gradient-to-br from-pink-300 via-pink-200 to-rose-200 px-6 py-7 text-pink-950 shadow-lg shadow-pink-200/60 sm:px-8 sm:py-9">
           <div class="flex flex-wrap items-end justify-between gap-5">
             <div>
-              <button class="mb-5 inline-flex items-center gap-2 text-sm font-medium text-pink-100 transition hover:text-white" @click="page = 'history'">← Kembali ke riwayat</button>
-              <p class="mb-2 text-sm font-semibold uppercase tracking-[0.16em] text-pink-200">Laporan hasil</p>
+              <button class="mb-5 inline-flex items-center gap-2 text-sm font-medium text-pink-800 transition hover:text-pink-950" @click="page = 'history'">← Kembali ke riwayat</button>
+              <p class="mb-2 text-sm font-semibold uppercase tracking-[0.16em] text-pink-800">Laporan hasil</p>
               <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">Akumulasi GMV</h1>
-              <p class="mt-2 text-sm text-pink-100">{{ dateLabel(activeResult.createdAt) }}</p>
+              <p class="mt-2 text-sm text-pink-800">{{ dateLabel(activeResult.createdAt) }}</p>
             </div>
             <button class="rounded-xl bg-white px-4 py-2.5 text-sm font-bold text-pink-700 shadow-sm transition hover:bg-pink-50" @click="startNew">+ Input baru</button>
           </div>
@@ -269,15 +267,15 @@ onMounted(() => {
       </section>
 
       <section v-else class="mx-auto max-w-4xl">
-        <header class="mb-8 overflow-hidden rounded-2xl bg-gradient-to-br from-pink-700 via-pink-600 to-fuchsia-600 px-6 py-7 text-white shadow-lg shadow-pink-200/60 sm:px-8 sm:py-9">
+        <header class="mb-8 overflow-hidden rounded-2xl bg-gradient-to-br from-pink-300 via-pink-200 to-rose-200 px-6 py-7 text-pink-950 shadow-lg shadow-pink-200/60 sm:px-8 sm:py-9">
           <div class="flex flex-wrap items-end justify-between gap-5">
             <div>
-              <button class="mb-5 inline-flex items-center gap-2 text-sm font-medium text-pink-100 transition hover:text-white" @click="page = 'entry'">← Kembali ke input</button>
-              <p class="mb-2 text-sm font-semibold uppercase tracking-[0.16em] text-pink-200">Arsip lokal</p>
+              <button class="mb-5 inline-flex items-center gap-2 text-sm font-medium text-pink-800 transition hover:text-pink-950" @click="page = 'entry'">← Kembali ke input</button>
+              <p class="mb-2 text-sm font-semibold uppercase tracking-[0.16em] text-pink-800">Arsip lokal</p>
               <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">Riwayat laporan</h1>
             </div>
             <div class="flex items-center gap-3">
-              <span class="rounded-xl border border-white/20 bg-white/10 px-4 py-2.5 text-sm font-semibold">{{ history.length }} {{ history.length === 1 ? 'laporan' : 'laporan' }}</span>
+              <span class="rounded-xl border border-pink-300 bg-white/40 px-4 py-2.5 text-sm font-semibold">{{ history.length }} {{ history.length === 1 ? 'laporan' : 'laporan' }}</span>
               <button class="rounded-xl bg-white px-4 py-2.5 text-sm font-bold text-pink-700 shadow-sm transition hover:bg-pink-50" @click="startNew">+ Input baru</button>
             </div>
           </div>
