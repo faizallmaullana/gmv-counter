@@ -248,6 +248,6 @@ onMounted(() => {
       </section>
       <p v-if="dbError" role="alert" class="mx-auto mt-5 max-w-3xl rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">{{ dbError }}</p>
     </main>
-    <footer class="border-t border-slate-200 bg-white py-5 text-center text-xs text-slate-400">Data riwayat tersimpan secara lokal di browser ini.</footer>
+    <footer class="border-t border-slate-200 bg-white py-5 text-center text-xs text-slate-400">Data riwayat tersimpan secara lokal di browser ini. <span class="mx-1">·</span> Dibuat oleh <a href="https://crkstudio.com" target="_blank" rel="noopener noreferrer" class="font-semibold text-slate-500 transition hover:text-indigo-600">CRK Studio</a></footer>
   </div>
 </template>
