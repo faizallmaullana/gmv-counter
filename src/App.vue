@@ -214,7 +214,6 @@ onMounted(() => {
             </div>
           </div>
           <div class="mb-6 flex items-center justify-between border-b border-slate-100 pb-4">
-            <div><h2 class="font-bold">Sesi {{ currentSession + 1 }}</h2><p class="mt-1 text-sm text-slate-500">{{ currentSession < 2 ? 'Data awal' : 'Data akhir' }} · isi semua metrik</p></div>
             <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">{{ currentSession + 1 }} / 4</span>
           </div>
           <div class="grid gap-5 sm:grid-cols-2">
