@@ -185,7 +185,6 @@ onMounted(() => {
     <header class="border-b border-slate-200 bg-white">
       <div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 sm:px-8">
         <button class="flex items-center gap-3 text-left" @click="startNew" aria-label="GMV Counter, mulai input baru">
-          <span class="grid size-10 place-items-center rounded-xl bg-indigo-600 text-lg font-bold text-white">G</span>
           <span><span class="block text-sm font-bold tracking-tight">GMV Counter</span><span class="block text-xs text-slate-500">Akumulasi performa sesi</span></span>
         </button>
         <div class="flex items-center gap-2">
@@ -197,10 +196,16 @@ onMounted(() => {
 
     <main class="mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-12">
       <section v-if="page === 'entry'" class="mx-auto max-w-3xl">
-        <div class="mb-8">
-          <p class="mb-2 text-sm font-semibold text-indigo-600">INPUT DATA</p>
-          <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">Catat performa sesi</h1>
-        </div>
+        <header class="mb-8 overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-700 via-indigo-600 to-violet-600 px-6 py-7 text-white shadow-lg shadow-indigo-200/60 sm:px-8 sm:py-9">
+          <div class="flex flex-wrap items-end justify-between gap-5">
+            <div>
+              <p class="mb-2 text-sm font-semibold uppercase tracking-[0.16em] text-indigo-200">Input data</p>
+              <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">Catat performa sesi</h1>
+              <p class="mt-2 text-sm text-indigo-100">Masukkan data untuk dihitung dan disimpan sebagai laporan.</p>
+            </div>
+            <span class="rounded-xl border border-white/20 bg-white/10 px-4 py-2.5 text-sm font-semibold">Sesi {{ currentSession + 1 }} / 4</span>
+          </div>
+        </header>
 
         <div class="mb-8 rounded-2xl border border-slate-200 bg-white p-5 sm:p-7">
           <div class="mb-7 flex items-start justify-between gap-2">
@@ -232,8 +237,17 @@ onMounted(() => {
       </section>
 
       <section v-else-if="page === 'report' && activeResult" class="mx-auto max-w-4xl">
-        <button class="mb-6 text-sm font-semibold text-slate-500 transition hover:text-indigo-700" @click="page = 'history'">← Kembali ke riwayat</button>
-        <div class="mb-8 flex flex-wrap items-end justify-between gap-4"><div><p class="mb-2 text-sm font-semibold text-indigo-600">LAPORAN HASIL</p><h1 class="text-3xl font-bold tracking-tight sm:text-4xl">Akumulasi GMV</h1><p class="mt-2 text-sm text-slate-500">{{ dateLabel(activeResult.createdAt) }}</p></div><button class="rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-indigo-700" @click="startNew">+ Input baru</button></div>
+        <header class="mb-8 overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-700 via-indigo-600 to-violet-600 px-6 py-7 text-white shadow-lg shadow-indigo-200/60 sm:px-8 sm:py-9">
+          <div class="flex flex-wrap items-end justify-between gap-5">
+            <div>
+              <button class="mb-5 inline-flex items-center gap-2 text-sm font-medium text-indigo-100 transition hover:text-white" @click="page = 'history'">← Kembali ke riwayat</button>
+              <p class="mb-2 text-sm font-semibold uppercase tracking-[0.16em] text-indigo-200">Laporan hasil</p>
+              <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">Akumulasi GMV</h1>
+              <p class="mt-2 text-sm text-indigo-100">{{ dateLabel(activeResult.createdAt) }}</p>
+            </div>
+            <button class="rounded-xl bg-white px-4 py-2.5 text-sm font-bold text-indigo-700 shadow-sm transition hover:bg-indigo-50" @click="startNew">+ Input baru</button>
+          </div>
+        </header>
         <div class="mb-6 overflow-hidden rounded-2xl border border-slate-200 bg-white">
           <div class="grid grid-cols-[1.2fr_1fr_1fr_1.1fr] gap-2 border-b border-slate-100 bg-slate-50 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500 sm:gap-4 sm:px-6"><span>Metrik</span><span>Sesi 2 − 1</span><span>Sesi 4 − 3</span><span>Total akumulasi</span></div>
           <div v-for="result in activeResult.results" :key="result.key" class="grid grid-cols-[1.2fr_1fr_1fr_1.1fr] items-center gap-2 border-b border-slate-100 px-4 py-4 last:border-0 sm:gap-4 sm:px-6"><span class="text-sm font-semibold">{{ result.label }}</span><span class="text-xs text-slate-600 sm:text-sm">{{ formatted(result, result.first) }}</span><span class="text-xs text-slate-600 sm:text-sm">{{ formatted(result, result.second) }}</span><span class="text-sm font-bold text-indigo-700 sm:text-base">{{ formatted(result, result.total) }}</span></div>
@@ -249,6 +263,20 @@ onMounted(() => {
       </section>
 
       <section v-else class="mx-auto max-w-4xl">
+        <header class="mb-8 overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-700 via-indigo-600 to-violet-600 px-6 py-7 text-white shadow-lg shadow-indigo-200/60 sm:px-8 sm:py-9">
+          <div class="flex flex-wrap items-end justify-between gap-5">
+            <div>
+              <button class="mb-5 inline-flex items-center gap-2 text-sm font-medium text-indigo-100 transition hover:text-white" @click="page = 'entry'">← Kembali ke input</button>
+              <p class="mb-2 text-sm font-semibold uppercase tracking-[0.16em] text-indigo-200">Arsip lokal</p>
+              <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">Riwayat laporan</h1>
+              <p class="mt-2 text-sm text-indigo-100">Laporan tersimpan di browser ini dan tersedia saat offline.</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="rounded-xl border border-white/20 bg-white/10 px-4 py-2.5 text-sm font-semibold">{{ history.length }} {{ history.length === 1 ? 'laporan' : 'laporan' }}</span>
+              <button class="rounded-xl bg-white px-4 py-2.5 text-sm font-bold text-indigo-700 shadow-sm transition hover:bg-indigo-50" @click="startNew">+ Input baru</button>
+            </div>
+          </div>
+        </header>
         <div v-if="history.length" class="space-y-3"><article v-for="report in history" :key="report.id" class="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-5 transition hover:border-indigo-200"><button class="min-w-0 flex-1 text-left" @click="selectHistory(report)"><span class="block font-bold">{{ formatCurrency(report.results.find((item) => item.key === 'gmv')?.total ?? 0) }} <span class="font-medium text-slate-500">GMV</span></span><span class="mt-1 block text-sm text-slate-500">{{ dateLabel(report.createdAt) }}</span></button><button class="rounded-lg px-3 py-2 text-sm font-semibold text-indigo-700 hover:bg-indigo-50" @click="selectHistory(report)">Lihat laporan →</button><button class="rounded-lg px-3 py-2 text-sm text-slate-400 hover:bg-rose-50 hover:text-rose-600" :aria-label="`Hapus laporan ${dateLabel(report.createdAt)}`" @click="reportToDelete = report">Hapus</button></article></div>
         <div v-else class="rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-14 text-center"><span class="mx-auto mb-4 grid size-12 place-items-center rounded-2xl bg-slate-100 text-xl text-slate-500">↗</span><h2 class="font-bold">Belum ada laporan</h2><p class="mt-2 text-sm text-slate-500">Selesaikan input empat sesi untuk menyimpan hasil pertamamu.</p><button class="mt-5 font-semibold text-indigo-700 hover:text-indigo-900" @click="startNew">Mulai input →</button></div>
       </section>
