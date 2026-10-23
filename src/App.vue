@@ -18,6 +18,10 @@ const activeResult = ref(null)
 const installPrompt = ref(null)
 const copiedReport = ref(false)
 const reportToDelete = ref(null)
+const sengPosition = ref({ left: 0, top: 0 })
+const sengSize = 48
+const sengClickCount = ref(0)
+const sengFullscreen = ref(false)
 
 const completed = computed(() => sessions.map((session) => fields.every((field) => session[field.key] !== '' && Number.isFinite(Number(session[field.key])))))
 const canContinue = computed(() => true)
@@ -180,8 +184,31 @@ async function installApp() {
   installPrompt.value = null
 }
 
+function moveSeng() {
+  const maxLeft = Math.max(0, window.innerWidth - sengSize)
+  const maxTop = Math.max(0, window.innerHeight - sengSize)
+  sengPosition.value = {
+    left: Math.round(Math.random() * maxLeft),
+    top: Math.round(Math.random() * maxTop),
+  }
+}
+
+function clickSeng() {
+  if (sengFullscreen.value) {
+    sengFullscreen.value = false
+    sengClickCount.value = 0
+    moveSeng()
+    return
+  }
+
+  sengClickCount.value += 1
+  if (sengClickCount.value >= 3) sengFullscreen.value = true
+  else moveSeng()
+}
+
 onMounted(() => {
   loadHistory()
+  moveSeng()
   window.addEventListener('beforeinstallprompt', (event) => {
     event.preventDefault()
     installPrompt.value = event
@@ -214,7 +241,6 @@ onMounted(() => {
             </div>
           </div>
         </header>
-<!-- trigger aja -->
         <div class="mb-8 rounded-2xl border border-slate-200 bg-white p-5 sm:p-7">
           <div class="mb-7 flex items-start justify-between gap-2">
             <div v-for="(session, index) in sessions" :key="index" class="flex min-w-0 flex-1 flex-col items-center">
@@ -296,6 +322,16 @@ onMounted(() => {
         </div>
       </section>
     </div>
+    <button
+      class="fixed z-40 overflow-hidden transition-all duration-300 focus:outline-none"
+      :class="sengFullscreen ? 'inset-0 h-screen w-screen cursor-zoom-out' : 'size-12 rounded-full shadow-md ring-1 ring-slate-200 hover:scale-110 focus:ring-4 focus:ring-pink-200'"
+      :style="sengFullscreen ? {} : { left: `${sengPosition.left}px`, top: `${sengPosition.top}px` }"
+      :aria-label="sengFullscreen ? 'Kecilkan ikon seng' : 'Pindahkan ikon seng'"
+      title="Klik untuk memindahkan"
+      @click="clickSeng"
+    >
+      <img src="/seng.webp" alt="" class="size-full object-cover" :class="sengFullscreen ? '' : 'rounded-full'" />
+    </button>
     <footer class="border-t border-slate-200 bg-white py-5 text-center text-xs text-slate-400">Dibuat oleh <a href="https://crkstudio.com" target="_blank" rel="noopener noreferrer" class="font-semibold text-slate-500 transition hover:text-pink-600">CRK Studio</a></footer>
   </div>
 </template>
